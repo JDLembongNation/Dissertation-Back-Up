@@ -23,6 +23,11 @@ protected:
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
-		
+	struct Species{
+		FString SpeciesName;
+		FString SpeciesDescription;
+		FString SpeciesImageLink;
+	};
+	TMap<FString, Species> SpeciesDictionary;
+	void GetEntryFromTag(FString identifier, Species& specimen);
 };

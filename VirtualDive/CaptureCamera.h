@@ -24,5 +24,16 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-		
+private:
+	TSet<FString> SeenAnimals;
+	void FindActors();
+	bool IsCameraActive = false;
+	UInputComponent* InputComponent = nullptr;
+	void ToggleCamera();
+	UFUNCTION(BlueprintCallable, Category="Capture")
+	void CaptureShot();
+	TArray<AActor*> FoundActors;
+	float range = 1000.f;
+	TArray<UBook::Species>Specimen;
 };
+

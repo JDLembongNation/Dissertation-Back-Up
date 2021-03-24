@@ -32,3 +32,10 @@ void UBook::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentT
 	// ...
 }
 
+void UBook::GetEntryFromTag(FString identifier, Species& specimen){
+
+	return specimen;
+}
+
+
+

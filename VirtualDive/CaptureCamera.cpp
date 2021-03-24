@@ -2,6 +2,15 @@
 
 
 #include "CaptureCamera.h"
+#include "Engine/World.h"
+#include "Engine/GameViewportClient.h"
+#include "GameFramework/PlayerController.h"
+#include "DrawDebugHelpers.h"
+#include "./InGameHud.h"
+#include "Book.h"
+#include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
+
+#define OUT //Readability --> Out Parameters. 
 
 // Sets default values for this component's properties
 UCaptureCamera::UCaptureCamera()
@@ -19,8 +28,16 @@ void UCaptureCamera::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
-	
+	InputComponent = GetOwner()->FindComponentByClass<UInputComponent>();
+	if(InputComponent){
+		InputComponent->BindAction("CaptureScreenshot",IE_Pressed, this, &UCaptureCamera::CaptureShot);
+		InputComponent->BindAction("OpenRecords", IE_Pressed, this, &UCaptureCamera::ToggleRecords);
+		InputComponent->BindAction("RecordLeft",IE_Pressed, this, &UCaptureCamera::UpdateDetailsPrevious);
+		InputComponent->BindAction("RecordRight", IE_Pressed, this, &UCaptureCamera::UpdateDetailsNext);
+	}
+	AInGameHud* InGameHud = Cast<AInGameHud>(GetWorld()->GetFirstPlayerController()->GetHUD());
+	if(InGameHud) InGameHud->CloseBook();
+
 }
 
 
@@ -28,7 +45,127 @@ void UCaptureCamera::BeginPlay()
 void UCaptureCamera::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
+	FVector PlayerViewPointLocation; 
+	FRotator PlayerViewPointRotation;
+	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(
+		PlayerViewPointLocation,
+		PlayerViewPointRotation
+	);
+	LineTraceEnd = PlayerViewPointLocation + PlayerViewPointRotation.Vector() * Range; //Vector Calculation A + B = AB
+	/*
+	DrawDebugLine(
+		GetWorld(),
+		PlayerViewPointLocation,
+		LineTraceEnd, 
+		FColor(0,255,0),
+		false, 
+		0.f,
+		0,
+		5.f
+	); //Indicate the range of the player when interacting with the animals. 
+	*/
+	DetectAnimal();
+	ProcessSighting();
 }
 
+
+void UCaptureCamera::CaptureShot(){
+	UE_LOG(LogTemp, Warning, TEXT("SCREENSHOT CALLED!!!"));
+	APlayerController* PController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	if(PController){
+		PController->ConsoleCommand(TEXT("HighResShot 2"), true); 
+	}
+}
+
+void UCaptureCamera::ToggleRecords(){
+	AInGameHud* InGameHud = Cast<AInGameHud>(GetWorld()->GetFirstPlayerController()->GetHUD());
+	if(InGameHud){
+		IsRecordViewable = !IsRecordViewable;
+		if(IsRecordViewable){
+			InGameHud->OpenBook();		
+		}
+		else InGameHud->CloseBook();
+	}
+}
+
+void UCaptureCamera::DetectAnimal(){
+	LineTraceEnd = GetPlayerLocation() + (GetPlayerRotation().Vector() * Range); //Vector() turns it into a unit vector. 
+	FHitResult Hit;
+	FCollisionQueryParams TraceParams(FName(TEXT("")), false, GetOwner()); //GetOwner() to ensure that Character is not selected
+	GetWorld()->LineTraceSingleByObjectType(
+		OUT Hit,
+		OUT GetPlayerLocation(),
+		OUT LineTraceEnd,
+		OUT FCollisionObjectQueryParams(),
+		OUT TraceParams
+	);
+	AnimalActor = Hit;
+}
+
+void UCaptureCamera::ProcessSighting(){
+	AActor* ActorHit = AnimalActor.GetActor();
+	if(ActorHit){
+		TArray<FName> Tags = ActorHit->Tags;
+		if(Tags.Contains("Animal")){
+			TArray<FName> AnimalTag = Tags; 
+			AnimalTag.Remove("Animal");
+			if(AnimalTag.Num() > 0){
+				FName Identifier = AnimalTag.Pop(); //There are only two tags. First is the animal identifier, second is the animal. 
+				if(!SeenAnimals.Contains(Identifier.ToString())){ 
+					UE_LOG(LogTemp, Warning, TEXT("%s added to list of sighting entries!"), *Identifier.ToString());
+					struct UBook::Species Specimen; 
+					UBook::GetEntryFromTag(Identifier.ToString(), Specimen);
+					SeenAnimals.Add(Identifier.ToString());
+					SpeciesList.Add(Specimen);
+				}
+			}else{
+				UE_LOG(LogTemp, Error, TEXT("An Associated Animal Tag has not been initialized with the %s object!"), *ActorHit->GetName());
+			}
+		}
+	}
+}
+
+FVector UCaptureCamera::GetPlayerLocation(){
+	FVector PlayerViewPointLocation; 
+	FRotator PlayerViewPointRotation;
+	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(
+		PlayerViewPointLocation,
+		PlayerViewPointRotation
+	);
+	return PlayerViewPointLocation;
+}
+
+FRotator UCaptureCamera::GetPlayerRotation(){
+		FVector PlayerViewPointLocation; 
+	FRotator PlayerViewPointRotation;
+	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(
+		PlayerViewPointLocation,
+		PlayerViewPointRotation
+	);
+	return PlayerViewPointRotation;
+}
+//
+
+void UCaptureCamera::UpdateDetailsNext(){
+	if(IsRecordViewable && SpeciesList.Num() > 0 && (SpeciesList.Num() > Reference+1)){
+		Reference++;
+		AInGameHud* InGameHud = Cast<AInGameHud>(GetWorld()->GetFirstPlayerController()->GetHUD());
+		if(InGameHud){
+			InGameHud->DisplayAnimal(SpeciesList[Reference].SpeciesName,
+			 						SpeciesList[Reference].SpeciesDescription, 
+									SpeciesList[Reference].SpeciesImageLink);
+		}
+	}
+}
+
+void UCaptureCamera::UpdateDetailsPrevious(){
+	if(IsRecordViewable && SpeciesList.Num() > 0 && (Reference > 0)){
+		Reference--;
+		AInGameHud* InGameHud = Cast<AInGameHud>(GetWorld()->GetFirstPlayerController()->GetHUD());
+		if(InGameHud){
+			InGameHud->DisplayAnimal(SpeciesList[Reference].SpeciesName,
+			 						SpeciesList[Reference].SpeciesDescription, 
+									SpeciesList[Reference].SpeciesImageLink);
+		}
+	}
+}
