@@ -18,6 +18,7 @@ UBerwickshireRequestHandler::UBerwickshireRequestHandler()
 void UBerwickshireRequestHandler::BeginPlay()
 {
 	Super::BeginPlay();
+	CreateMap();
 	CallToDatabase();
 	// ...
 	
@@ -57,6 +58,7 @@ void UBerwickshireRequestHandler::OnResponseReceived(FHttpRequestPtr Request, FH
 	//Deserialize the json data given Reader and the actual object to deserialize
 	if (FJsonSerializer::Deserialize(Reader, JsonObject)){
 		UE_LOG(LogTemp, Warning, TEXT("SUCCESSFULLY CONNECTED"));
+		ProcessJSON();
 	}
 	FString path = FPaths::ProjectContentDir() + "db/contents.json";
 	FFileHelper::SaveStringToFile(Response->GetContentAsString(), *path);
@@ -75,6 +77,21 @@ void UBerwickshireRequestHandler::OnResponseReceived(FHttpRequestPtr Request, FH
 	if (FJsonSerializer::Deserialize(Reader, JsonObject))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("SUCCESSFULLY PUlled from Local Database"));
+		ProcessJSON();
 	}
 	}
+}
+void UBerwickshireRequestHandler::ProcessJSON(TSharedPtr<FJsonObject> JsonObject){
+	
+}
+
+void UBerwickshireRequestHandler::CreateMap(){
+	ReferenceMap.Add(224, "Seal"); //Grey Seals
+	ReferenceMap.Add(4651, "Dolphin");
+	ReferenceMap.Add(246, "Ray");
+	ReferenceMap.Add(4653. "Whale");
+	ReferenceMap.Add(330, "Lobster");
+	ReferenceMap.Add(228, "Crab");
+	ReferenceMap.Add(202, "Wolffish");
+	ReferenceMap.Add(207, "Jellyfish");
 }

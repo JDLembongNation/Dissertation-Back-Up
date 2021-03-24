@@ -23,6 +23,7 @@ protected:
 
 public:	
 	// Called every frame
+	TMap<int32, FString> ReferenceMap; //Combines Ref number with Tag Name
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	FHttpModule* Http;
 	/* The actual HTTP call */
@@ -31,6 +32,7 @@ public:
 
 	/*Assign this function to call when the GET request processes sucessfully*/
 	void OnResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
-
+	void ProcessJSON();
+	void CreateMap();
 		
 };
