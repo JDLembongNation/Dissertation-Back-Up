@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Book.h"
 #include "CaptureCamera.generated.h"
 
 
@@ -25,15 +26,26 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 private:
-	TSet<FString> SeenAnimals;
-	void FindActors();
+	TSet<FString> SeenAnimals; //Record Animals that are seen here. 
+	bool IsRecordViewable = false;
+	FHitResult AnimalActor;
 	bool IsCameraActive = false;
 	UInputComponent* InputComponent = nullptr;
-	void ToggleCamera();
+	TArray<UBook::Species> SpeciesList;
+	TArray<AActor*> FoundActors;
+	float Range = 1500.f; //Change if necessary. 
+	FVector LineTraceEnd;
 	UFUNCTION(BlueprintCallable, Category="Capture")
 	void CaptureShot();
-	TArray<AActor*> FoundActors;
-	float range = 1000.f;
-	TArray<UBook::Species>Specimen;
+
+	FVector GetPlayerLocation(); 
+	FRotator GetPlayerRotation();
+	void ProcessSighting();
+	void DetectAnimal(); 
+	void ToggleRecords();
+	void UpdateDetailsNext();
+	void UpdateDetailsPrevious();
+	int32 Reference = -1; //The book position in the speciesList.
+
 };
 

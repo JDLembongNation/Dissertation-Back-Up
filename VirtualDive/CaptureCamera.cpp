@@ -6,7 +6,7 @@
 #include "Engine/GameViewportClient.h"
 #include "GameFramework/PlayerController.h"
 #include "DrawDebugHelpers.h"
-#include "./InGameHud.h"
+#include "InGameHud.h"
 #include "Book.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 
@@ -35,8 +35,8 @@ void UCaptureCamera::BeginPlay()
 		InputComponent->BindAction("RecordLeft",IE_Pressed, this, &UCaptureCamera::UpdateDetailsPrevious);
 		InputComponent->BindAction("RecordRight", IE_Pressed, this, &UCaptureCamera::UpdateDetailsNext);
 	}
-	AInGameHud* InGameHud = Cast<AInGameHud>(GetWorld()->GetFirstPlayerController()->GetHUD());
-	if(InGameHud) InGameHud->CloseBook();
+	AInGameHUD* InGameHUD = Cast<AInGameHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+	if(InGameHUD) InGameHUD->CloseBook();
 
 }
 
@@ -78,13 +78,13 @@ void UCaptureCamera::CaptureShot(){
 }
 
 void UCaptureCamera::ToggleRecords(){
-	AInGameHud* InGameHud = Cast<AInGameHud>(GetWorld()->GetFirstPlayerController()->GetHUD());
-	if(InGameHud){
+	AInGameHUD* InGameHUD = Cast<AInGameHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+	if(InGameHUD){
 		IsRecordViewable = !IsRecordViewable;
 		if(IsRecordViewable){
-			InGameHud->OpenBook();		
+			InGameHUD->OpenBook();		
 		}
-		else InGameHud->CloseBook();
+		else InGameHUD->CloseBook();
 	}
 }
 
@@ -149,9 +149,9 @@ FRotator UCaptureCamera::GetPlayerRotation(){
 void UCaptureCamera::UpdateDetailsNext(){
 	if(IsRecordViewable && SpeciesList.Num() > 0 && (SpeciesList.Num() > Reference+1)){
 		Reference++;
-		AInGameHud* InGameHud = Cast<AInGameHud>(GetWorld()->GetFirstPlayerController()->GetHUD());
-		if(InGameHud){
-			InGameHud->DisplayAnimal(SpeciesList[Reference].SpeciesName,
+		AInGameHUD* InGameHUD = Cast<AInGameHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+		if(InGameHUD){
+			InGameHUD->DisplayAnimal(SpeciesList[Reference].SpeciesName,
 			 						SpeciesList[Reference].SpeciesDescription, 
 									SpeciesList[Reference].SpeciesImageLink);
 		}
@@ -161,9 +161,9 @@ void UCaptureCamera::UpdateDetailsNext(){
 void UCaptureCamera::UpdateDetailsPrevious(){
 	if(IsRecordViewable && SpeciesList.Num() > 0 && (Reference > 0)){
 		Reference--;
-		AInGameHud* InGameHud = Cast<AInGameHud>(GetWorld()->GetFirstPlayerController()->GetHUD());
-		if(InGameHud){
-			InGameHud->DisplayAnimal(SpeciesList[Reference].SpeciesName,
+		AInGameHUD* InGameHUD = Cast<AInGameHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+		if(InGameHUD){
+			InGameHUD->DisplayAnimal(SpeciesList[Reference].SpeciesName,
 			 						SpeciesList[Reference].SpeciesDescription, 
 									SpeciesList[Reference].SpeciesImageLink);
 		}

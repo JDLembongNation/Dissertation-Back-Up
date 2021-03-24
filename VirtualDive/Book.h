@@ -29,5 +29,5 @@ public:
 		FString SpeciesImageLink;
 	};
 	TMap<FString, Species> SpeciesDictionary;
-	void GetEntryFromTag(FString identifier, Species& specimen);
+	static void GetEntryFromTag(FString identifier, Species& specimen);
 };
