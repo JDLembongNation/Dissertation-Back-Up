@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Book.h"
 #include "Runtime/Online/HTTP/Public/Http.h"
 #include "BerwickshireRequestHandler.generated.h"
 
@@ -32,7 +33,7 @@ public:
 
 	/*Assign this function to call when the GET request processes sucessfully*/
 	void OnResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
-	void ProcessJSON();
+	void ProcessJSON(TSharedPtr<FJsonObject> JsonObject);
 	void CreateMap();
 		
 };

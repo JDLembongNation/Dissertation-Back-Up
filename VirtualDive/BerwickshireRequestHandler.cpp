@@ -58,7 +58,7 @@ void UBerwickshireRequestHandler::OnResponseReceived(FHttpRequestPtr Request, FH
 	//Deserialize the json data given Reader and the actual object to deserialize
 	if (FJsonSerializer::Deserialize(Reader, JsonObject)){
 		UE_LOG(LogTemp, Warning, TEXT("SUCCESSFULLY CONNECTED"));
-		ProcessJSON();
+		ProcessJSON(JsonObject);
 	}
 	FString path = FPaths::ProjectContentDir() + "db/contents.json";
 	FFileHelper::SaveStringToFile(Response->GetContentAsString(), *path);
@@ -77,19 +77,30 @@ void UBerwickshireRequestHandler::OnResponseReceived(FHttpRequestPtr Request, FH
 	if (FJsonSerializer::Deserialize(Reader, JsonObject))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("SUCCESSFULLY PUlled from Local Database"));
-		ProcessJSON();
+		ProcessJSON(JsonObject);
 	}
 	}
 }
 void UBerwickshireRequestHandler::ProcessJSON(TSharedPtr<FJsonObject> JsonObject){
-	
+	TSharedPtr<FJsonObject> ItemObject  = JsonObject->GetObjectField("items");
+	for(const TPair<int32, FString>&pair: ReferenceMap){
+		FString result ="";
+		result.AppendInt(pair.Key);
+		TSharedPtr<FJsonObject> value = ItemObject->GetObjectField(result);
+		struct UBook::Species Specimen; 
+		Specimen.SpeciesName = value->GetStringField("Title");
+		//Specimen.SpeciesDescription = value->GetStringField("Title");
+		//Specimen.SpeciesImageLink = value->GetStringField("Title");
+		Specimen.SpeciesTag = pair.Value;
+		UBook::SpeciesDictionary.Add(pair.Value, Specimen); //Tag and then species
+	}
 }
 
 void UBerwickshireRequestHandler::CreateMap(){
 	ReferenceMap.Add(224, "Seal"); //Grey Seals
 	ReferenceMap.Add(4651, "Dolphin");
 	ReferenceMap.Add(246, "Ray");
-	ReferenceMap.Add(4653. "Whale");
+	ReferenceMap.Add(4653, "Whale");
 	ReferenceMap.Add(330, "Lobster");
 	ReferenceMap.Add(228, "Crab");
 	ReferenceMap.Add(202, "Wolffish");

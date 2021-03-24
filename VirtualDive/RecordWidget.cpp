@@ -11,10 +11,11 @@ void URecordWidget::NativeConstruct(){
 
 void URecordWidget::DisplayAnimal(FString Name, FString Description, FString ImageLink){
     AnimalTitle->SetText(FText::FromString(Name));
-    AnimalDescription->SetText(FText::FromString(Description));
+    //AnimalDescription->SetText(FText::FromString(Description));
 }
 
 void URecordWidget::OpenBook(){
+
     if(AttachedUI()){
         AnimalTitle->SetVisibility(ESlateVisibility::Visible);
         AnimalDescription->SetVisibility(ESlateVisibility::Visible);

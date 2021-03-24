@@ -12,16 +12,15 @@ UBook::UBook()
 
 	// ...
 }
-
-
 // Called when the game starts
 void UBook::BeginPlay()
 {
 	Super::BeginPlay();
-
 	// ...
 	
 }
+TMap<FString, UBook::Species> UBook::SpeciesDictionary;
+
 
 
 // Called every frame
@@ -32,9 +31,11 @@ void UBook::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentT
 	// ...
 }
 
-void UBook::GetEntryFromTag(FString identifier, Species& specimen){
-
+void UBook::GetEntryFromTag(FString identifier, Species& specimen){ //identifier is the tag.
+	specimen = SpeciesDictionary.FindOrAdd(identifier); //If doesnt work change key to int32. 
 }
+
+
 
 
 

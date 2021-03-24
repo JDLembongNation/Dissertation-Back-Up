@@ -36,7 +36,10 @@ void UCaptureCamera::BeginPlay()
 		InputComponent->BindAction("RecordRight", IE_Pressed, this, &UCaptureCamera::UpdateDetailsNext);
 	}
 	AInGameHUD* InGameHUD = Cast<AInGameHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
-	if(InGameHUD) InGameHUD->CloseBook();
+	if(InGameHUD){
+		UE_LOG(LogTemp, Warning, TEXT("PEYSAR"));
+		InGameHUD->CloseBook();
+	} 
 
 }
 
@@ -80,6 +83,7 @@ void UCaptureCamera::CaptureShot(){
 void UCaptureCamera::ToggleRecords(){
 	AInGameHUD* InGameHUD = Cast<AInGameHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 	if(InGameHUD){
+			UE_LOG(LogTemp, Warning, TEXT("RECORD TOGGLING"));
 		IsRecordViewable = !IsRecordViewable;
 		if(IsRecordViewable){
 			InGameHUD->OpenBook();		

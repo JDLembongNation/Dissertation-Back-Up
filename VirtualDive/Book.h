@@ -25,9 +25,10 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	struct Species{
 		FString SpeciesName;
+		FString SpeciesTag;
 		FString SpeciesDescription;
 		FString SpeciesImageLink;
 	};
-	TMap<FString, Species> SpeciesDictionary;
-	static void GetEntryFromTag(FString identifier, Species& specimen);
+	static TMap<FString, Species> SpeciesDictionary;
+	static void GetEntryFromTag(FString identifier, Species& specimen); //Tag is not the same as epciesName. need separate Map to convert the two.
 };
