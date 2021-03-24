@@ -3,3 +3,39 @@
 
 #include "InGameHUD.h"
 
+AInGameHUD::AInGameHUD(){
+
+}
+
+void AInGameHUD::BeginPlay(){
+    Super::BeginPlay();
+    if(RecordWidgetClass){
+        RecordWidget = CreateWidget<URecordWidget>(GetWorld(), RecordWidgetClass);
+        if(RecordWidget){
+            RecordWidget->AddToViewport();
+        }
+    }
+}
+
+void AInGameHUD::Tick(float DeltaSeconds){
+    Super::Tick(DeltaSeconds);
+}
+
+void AInGameHUD::DrawHUD(){
+    Super::DrawHUD();
+}
+void AInGameHUD::DisplayAnimal(FString Name, FString Description, FString ImageLink){
+    if(RecordWidget){
+        RecordWidget->DisplayAnimal(Name, Description, ImageLink);
+    }
+}
+void AInGameHUD::OpenBook(){
+    if(RecordWidget){
+        RecordWidget->OpenBook();
+    }
+} 
+void AInGameHUD::CloseBook(){
+    if(RecordWidget){
+        RecordWidget->CloseBook();
+    }
+} 

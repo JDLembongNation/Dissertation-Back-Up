@@ -3,11 +3,15 @@
 
 #include "RecordWidget.h"
 
-URecordWidget::URecordWidget(const FObjectInitializer& ObjectInitializer){
-
+URecordWidget::URecordWidget(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer){
 }
 void URecordWidget::NativeConstruct(){
     Super::NativeConstruct();
+}
+
+void URecordWidget::DisplayAnimal(FString Name, FString Description, FString ImageLink){
+    AnimalTitle->SetText(FText::FromString(Name));
+    AnimalDescription->SetText(FText::FromString(Description));
 }
 
 void URecordWidget::OpenBook(){

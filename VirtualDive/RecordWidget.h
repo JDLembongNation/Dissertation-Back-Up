@@ -18,7 +18,7 @@ class VIRTUALDIVE_API URecordWidget : public UUserWidget
 	public: 
 	URecordWidget(const FObjectInitializer& ObjectInitializer);
 	virtual void NativeConstruct() override; 
-	void DisplayAnimal();
+	void DisplayAnimal(FString Name, FString Description, FString ImageLink);
 	void OpenBook();
 	void CloseBook();
 	bool AttachedUI();
