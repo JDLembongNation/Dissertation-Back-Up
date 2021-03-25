@@ -29,6 +29,8 @@ class VIRTUALDIVE_API URecordWidget : public UUserWidget
 		class UTextBlock* AnimalDescription;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 		class UImage* AnimalImage;
+			UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+		class UImage* BackgroundImage;
 
 
 };

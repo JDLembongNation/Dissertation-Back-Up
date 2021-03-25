@@ -20,6 +20,7 @@ void URecordWidget::OpenBook(){
         AnimalTitle->SetVisibility(ESlateVisibility::Visible);
         AnimalDescription->SetVisibility(ESlateVisibility::Visible);
         AnimalImage->SetVisibility(ESlateVisibility::Visible);
+        BackgroundImage->SetVisibility(ESlateVisibility::Visible);
     }
 }
 
@@ -28,9 +29,10 @@ void URecordWidget::CloseBook(){
         AnimalTitle->SetVisibility(ESlateVisibility::Hidden);
         AnimalDescription->SetVisibility(ESlateVisibility::Hidden);
         AnimalImage->SetVisibility(ESlateVisibility::Hidden);
+        BackgroundImage->SetVisibility(ESlateVisibility::Hidden);
     }
 }
 
 bool URecordWidget::AttachedUI(){
-    return (AnimalTitle && AnimalDescription && AnimalImage);
+    return (AnimalTitle && AnimalDescription && AnimalImage && BackgroundImage);
 }
