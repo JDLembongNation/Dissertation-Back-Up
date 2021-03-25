@@ -37,7 +37,6 @@ void UCaptureCamera::BeginPlay()
 	}
 	AInGameHUD* InGameHUD = Cast<AInGameHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 	if(InGameHUD){
-		UE_LOG(LogTemp, Warning, TEXT("PEYSAR"));
 		InGameHUD->CloseBook();
 	} 
 
@@ -100,7 +99,7 @@ void UCaptureCamera::DetectAnimal(){
 		OUT Hit,
 		OUT GetPlayerLocation(),
 		OUT LineTraceEnd,
-		OUT FCollisionObjectQueryParams(),
+		OUT FCollisionObjectQueryParams(ECollisionChannel::ECC_PhysicsBody),
 		OUT TraceParams
 	);
 	AnimalActor = Hit;
@@ -110,7 +109,9 @@ void UCaptureCamera::ProcessSighting(){
 	AActor* ActorHit = AnimalActor.GetActor();
 	if(ActorHit){
 		TArray<FName> Tags = ActorHit->Tags;
+				UE_LOG(LogTemp, Warning, TEXT("TAKUS"));
 		if(Tags.Contains("Animal")){
+					UE_LOG(LogTemp, Warning, TEXT("TUKUS"));
 			TArray<FName> AnimalTag = Tags; 
 			AnimalTag.Remove("Animal");
 			if(AnimalTag.Num() > 0){
