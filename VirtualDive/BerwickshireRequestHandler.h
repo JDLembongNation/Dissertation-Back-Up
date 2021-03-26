@@ -6,6 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "Book.h"
 #include "Runtime/Online/HTTP/Public/Http.h"
+#include "Brushes/SlateDynamicImageBrush.h"
 #include "BerwickshireRequestHandler.generated.h"
 
 
@@ -36,5 +37,5 @@ public:
 	void ProcessJSON(TSharedPtr<FJsonObject> JsonObject);
 	void CreateMap();
 	FString SplitString(FString input);
-		
+	TSharedPtr<FSlateDynamicImageBrush> CallForImage();
 };

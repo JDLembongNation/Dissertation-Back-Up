@@ -81,12 +81,19 @@ void UBerwickshireRequestHandler::OnResponseReceived(FHttpRequestPtr Request, FH
 	}
 	}
 }
+
 void UBerwickshireRequestHandler::ProcessJSON(TSharedPtr<FJsonObject> JsonObject){
+	TSharedPtr<FJsonObject> AnimalCollection  = JsonObject->GetObjectField("collections");
 	TSharedPtr<FJsonObject> ItemObject  = JsonObject->GetObjectField("items");
+	TSharedPtr<FJsonObject> CollectionItemObject = JsonObject->GetObjectField("collectionItems");
 	for(const TPair<int32, FString>&pair: ReferenceMap){
-		FString result ="";
-		result.AppendInt(pair.Key);
-		TSharedPtr<FJsonObject> value = ItemObject->GetObjectField(result);
+		FString val = "";
+		val.AppendInt(pair.Key);
+		TSharedPtr<FJsonObject> Animal  = AnimalCollection->GetObjectField(val);
+		FString identifier = Animal->GetStringField("Identifier");
+		int id = Animal->GetIntegerField("id");
+		TArray<TSharedPtr<FJsonValue>> records = CollectionItemObject->GetArrayField(val);
+		TSharedPtr<FJsonObject> value = ItemObject->GetObjectField(identifier);
 		struct UBook::Species Specimen; 
 		Specimen.SpeciesName = value->GetStringField("Title");
 		if(value->HasField("Description")){
@@ -116,12 +123,11 @@ FString UBerwickshireRequestHandler::SplitString(FString input){
 }
 
 void UBerwickshireRequestHandler::CreateMap(){
-	ReferenceMap.Add(224, "Seal"); //Grey Seals
-	ReferenceMap.Add(4651, "Dolphin");
-	ReferenceMap.Add(246, "Ray");
-	ReferenceMap.Add(4653, "Whale");
-	ReferenceMap.Add(330, "Lobster");
-	ReferenceMap.Add(228, "Crab");
-	ReferenceMap.Add(202, "Wolffish");
-	ReferenceMap.Add(207, "Jellyfish");
+	ReferenceMap.Add(68, "Seal"); //Grey Seals
+	ReferenceMap.Add(90, "Ray"); //Grey Seals
+	ReferenceMap.Add(4312,"Whale"); //Grey Seals
+	ReferenceMap.Add(46,"Wolffish"); //Grey Seals
+	ReferenceMap.Add(61,"Crab"); //Grey Seals
+	ReferenceMap.Add(48,"Lobster"); //Grey Seals
+	ReferenceMap.Add(51,"Jellyfish"); //Grey Seals
 }
