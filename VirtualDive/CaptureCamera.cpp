@@ -85,7 +85,8 @@ void UCaptureCamera::ToggleRecords(){
 			UE_LOG(LogTemp, Warning, TEXT("RECORD TOGGLING"));
 		IsRecordViewable = !IsRecordViewable;
 		if(IsRecordViewable){
-			InGameHUD->OpenBook();		
+			if(SeenAnimals.Num() == 0) InGameHUD->OpenInfo();
+			else InGameHUD->OpenBook();		
 		}
 		else InGameHUD->CloseBook();
 	}
@@ -122,6 +123,7 @@ void UCaptureCamera::ProcessSighting(){
 					UBook::GetEntryFromTag(Identifier.ToString(), Specimen);
 					SeenAnimals.Add(Identifier.ToString());
 					SpeciesList.Add(Specimen);
+					if(SeenAnimals.Num() == 1) ProcessFirstAnimal();
 				}
 			}else{
 				UE_LOG(LogTemp, Error, TEXT("An Associated Animal Tag has not been initialized with the %s object!"), *ActorHit->GetName());
@@ -130,6 +132,15 @@ void UCaptureCamera::ProcessSighting(){
 	}
 }
 
+void UCaptureCamera::ProcessFirstAnimal(){
+	AInGameHUD* InGameHUD = Cast<AInGameHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+	if(InGameHUD){
+		InGameHUD->DisplayAnimal(SpeciesList[0].SpeciesName,
+			 						SpeciesList[0].SpeciesDescription, 
+									SpeciesList[0].SpeciesImageLink);
+	}
+
+}
 FVector UCaptureCamera::GetPlayerLocation(){
 	FVector PlayerViewPointLocation; 
 	FRotator PlayerViewPointRotation;

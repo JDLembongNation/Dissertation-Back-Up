@@ -89,11 +89,30 @@ void UBerwickshireRequestHandler::ProcessJSON(TSharedPtr<FJsonObject> JsonObject
 		TSharedPtr<FJsonObject> value = ItemObject->GetObjectField(result);
 		struct UBook::Species Specimen; 
 		Specimen.SpeciesName = value->GetStringField("Title");
-		//Specimen.SpeciesDescription = value->GetStringField("Title");
+		if(value->HasField("Description")){
+			FString description = SplitString(value->GetStringField("Description"));
+			Specimen.SpeciesDescription = description;
+		} 
+		else Specimen.SpeciesDescription = TEXT("None");
 		//Specimen.SpeciesImageLink = value->GetStringField("Title");
 		Specimen.SpeciesTag = pair.Value;
 		UBook::SpeciesDictionary.Add(pair.Value, Specimen); //Tag and then species
 	}
+}
+FString UBerwickshireRequestHandler::SplitString(FString input){
+	FString newString = "";
+	for(int32 i = 0; i < input.Len(); i+=70){
+		if(input.Len()-1 >= i+70){
+			newString+=input.Mid(i, 70);
+			newString+="\n ";
+			//add full
+		}else{
+			newString+=input.Mid(i, input.Len()-1);
+			return newString;
+		}
+	}
+	return newString;
+
 }
 
 void UBerwickshireRequestHandler::CreateMap(){

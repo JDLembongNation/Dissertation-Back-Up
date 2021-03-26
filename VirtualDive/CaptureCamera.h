@@ -45,6 +45,7 @@ private:
 	void ToggleRecords();
 	void UpdateDetailsNext();
 	void UpdateDetailsPrevious();
+	void ProcessFirstAnimal();
 	int32 Reference = -1; //The book position in the speciesList.
 
 };

@@ -27,6 +27,12 @@ class VIRTUALDIVE_API AInGameHUD : public AHUD
 	void OpenBook();
 	UFUNCTION()
 	void CloseBook();
+	UFUNCTION()
+	void OpenInfo();
+	UFUNCTION()
+	void ActivateLeftArrow();
+	UFUNCTION()
+	void ActivateRightArrow();
 
 	UPROPERTY(EditDefaultsOnly, Category="Widgets")
 	TSubclassOf<UUserWidget> RecordWidgetClass;

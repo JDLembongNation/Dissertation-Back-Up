@@ -34,8 +34,23 @@ void AInGameHUD::OpenBook(){
         RecordWidget->OpenBook();
     }
 } 
+void AInGameHUD::OpenInfo(){
+    if(RecordWidget){
+        RecordWidget->OpenInfo();
+    }
+}
 void AInGameHUD::CloseBook(){
     if(RecordWidget){
         RecordWidget->CloseBook();
     }
 } 
+void AInGameHUD::ActivateLeftArrow(){
+    if(RecordWidget){
+        RecordWidget->ActivateLeftArrow();
+    }
+}
+void AInGameHUD::ActivateRightArrow(){
+    if(RecordWidget){
+        RecordWidget->ActivateRightArrow();
+    }
+}

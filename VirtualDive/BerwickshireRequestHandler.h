@@ -35,5 +35,6 @@ public:
 	void OnResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
 	void ProcessJSON(TSharedPtr<FJsonObject> JsonObject);
 	void CreateMap();
+	FString SplitString(FString input);
 		
 };

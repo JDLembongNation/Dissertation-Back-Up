@@ -22,6 +22,9 @@ class VIRTUALDIVE_API URecordWidget : public UUserWidget
 	void OpenBook();
 	void CloseBook();
 	bool AttachedUI();
+	void OpenInfo();
+	void ActivateLeftArrow(); //If the player can go left, the left key will emerge.
+	void ActivateRightArrow(); //If the player can go right, the right key will be shown.
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 		class UTextBlock* AnimalTitle;
@@ -29,8 +32,12 @@ class VIRTUALDIVE_API URecordWidget : public UUserWidget
 		class UTextBlock* AnimalDescription;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 		class UImage* AnimalImage;
-			UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 		class UImage* BackgroundImage;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+		class UImage* LeftArrowImage;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+		class UImage* RightArrowImage;
 
 
 };
