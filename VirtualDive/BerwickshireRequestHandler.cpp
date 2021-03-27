@@ -147,8 +147,8 @@ void UBerwickshireRequestHandler::CallForImage(FString url){
 void UBerwickshireRequestHandler::OnImageReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful){
 	if(bWasSuccessful && Response.IsValid()){
 		TArray<uint8> ImageData = Response->GetContent();
-		UE_LOG(LogTemp, Warning, TEXT("%s IS THE URL ORIGIN"), *Request->GetURL());
 		TSharedPtr<FSlateDynamicImageBrush> Image = CreateBrush(FName(*Request->GetURL()), ImageData);
+		UE_LOG(LogTemp, Warning, TEXT("Brush Created"));
 		//FSlateDynamicImageBrush Img = (FSlateDynamicImageBrush) *Image.Get();
 		for(const TPair<FString, FString>&pair: ReferenceImage){
 			if(pair.Key.Equals(Request->GetURL())){
@@ -194,9 +194,10 @@ void UBerwickshireRequestHandler::CreateMap(){
 	ReferenceMap.Add(68, "Seal"); //Grey Seals
 	ReferenceMap.Add(90, "Ray"); //Grey Seals
 	ReferenceMap.Add(4312,"Whale"); //Grey Seals
+	ReferenceMap.Add(4310,"Dolphin"); //Grey Seals
 	ReferenceMap.Add(46,"Wolffish"); //Grey Seals
 	ReferenceMap.Add(61,"Crab"); //Grey Seals
 	ReferenceMap.Add(48,"Lobster"); //Grey Seals
 	ReferenceMap.Add(51,"Jellyfish"); //Grey Seals
-	ReferenceImage.Add("https://www.berwickshiremarinereserve.uk/omeka/files/square_thumbnails/160/Lawson_Wood_DSC_0021_Grey_Seal.jpg","Seal");
+	ReferenceMap.Add(423, "Kelp"); //Need to be targeted a different way. 
 }

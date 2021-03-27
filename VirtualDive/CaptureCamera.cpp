@@ -110,11 +110,10 @@ void UCaptureCamera::ProcessSighting(){
 	AActor* ActorHit = AnimalActor.GetActor();
 	if(ActorHit){
 		TArray<FName> Tags = ActorHit->Tags;
-				UE_LOG(LogTemp, Warning, TEXT("TAKUS"));
-		if(Tags.Contains("Animal")){
-					UE_LOG(LogTemp, Warning, TEXT("TUKUS"));
+		if(Tags.Contains("Animal") || Tags.Contains("Plant")){
 			TArray<FName> AnimalTag = Tags; 
-			AnimalTag.Remove("Animal");
+			if(Tags.Contains("Animal"))AnimalTag.Remove("Animal");
+			if(Tags.Contains("Plant"))AnimalTag.Remove("Plant");
 			if(AnimalTag.Num() > 0){
 				FName Identifier = AnimalTag.Pop(); //There are only two tags. First is the animal identifier, second is the animal. 
 				if(!SeenAnimals.Contains(Identifier.ToString())){ 
