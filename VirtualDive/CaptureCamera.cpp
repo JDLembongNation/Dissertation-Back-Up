@@ -136,6 +136,7 @@ void UCaptureCamera::ProcessFirstAnimal(){
 	AInGameHUD* InGameHUD = Cast<AInGameHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 	if(InGameHUD){
 		InGameHUD->DisplayAnimal(SpeciesList[0].SpeciesName,
+									SpeciesList[0].SpeciesTag,
 			 						SpeciesList[0].SpeciesDescription, 
 									SpeciesList[0].SpeciesImageLink);
 	}
@@ -168,6 +169,7 @@ void UCaptureCamera::UpdateDetailsNext(){
 		AInGameHUD* InGameHUD = Cast<AInGameHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 		if(InGameHUD){
 			InGameHUD->DisplayAnimal(SpeciesList[Reference].SpeciesName,
+									SpeciesList[Reference].SpeciesTag,
 			 						SpeciesList[Reference].SpeciesDescription, 
 									SpeciesList[Reference].SpeciesImageLink);
 		}
@@ -180,6 +182,7 @@ void UCaptureCamera::UpdateDetailsPrevious(){
 		AInGameHUD* InGameHUD = Cast<AInGameHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 		if(InGameHUD){
 			InGameHUD->DisplayAnimal(SpeciesList[Reference].SpeciesName,
+									SpeciesList[Reference].SpeciesTag,
 			 						SpeciesList[Reference].SpeciesDescription, 
 									SpeciesList[Reference].SpeciesImageLink);
 		}

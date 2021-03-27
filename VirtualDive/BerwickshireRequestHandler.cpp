@@ -104,8 +104,23 @@ void UBerwickshireRequestHandler::ProcessJSON(TSharedPtr<FJsonObject> JsonObject
 		//Specimen.SpeciesImageLink = value->GetStringField("Title");
 		Specimen.SpeciesTag = pair.Value;
 		UBook::SpeciesDictionary.Add(pair.Value, Specimen); //Tag and then species
+		if(records.Num() > 0){
+			val = "";
+			val.AppendInt(records[0]->AsNumber());
+			UE_LOG(LogTemp, Warning, TEXT("%s IS USED"), *val);
+			TSharedPtr<FJsonObject> AnimalSpec = ItemObject->GetObjectField(val);
+			if(AnimalSpec->HasField("squarethumbs")){
+			TArray<TSharedPtr<FJsonValue>> ImageList = AnimalSpec->GetArrayField("squarethumbs");
+			if(ImageList.Num()>0){
+				FString url = ImageList[0]->AsString();
+				ReferenceImage.Add(url, pair.Value);//URL and Tag name 
+				CallForImage(url);
+			}
+			}
+		}
 	}
 }
+
 FString UBerwickshireRequestHandler::SplitString(FString input){
 	FString newString = "";
 	for(int32 i = 0; i < input.Len(); i+=70){
@@ -121,6 +136,59 @@ FString UBerwickshireRequestHandler::SplitString(FString input){
 	return newString;
 
 }
+void UBerwickshireRequestHandler::CallForImage(FString url){
+	TSharedRef<IHttpRequest> ImageRequest = Http->CreateRequest();
+	ImageRequest->SetVerb("GET");
+	ImageRequest->SetURL(url);
+	ImageRequest->OnProcessRequestComplete().BindUObject(this, &UBerwickshireRequestHandler::OnImageReceived);
+	ImageRequest->ProcessRequest();
+}
+
+void UBerwickshireRequestHandler::OnImageReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful){
+	if(bWasSuccessful && Response.IsValid()){
+		TArray<uint8> ImageData = Response->GetContent();
+		UE_LOG(LogTemp, Warning, TEXT("%s IS THE URL ORIGIN"), *Request->GetURL());
+		TSharedPtr<FSlateDynamicImageBrush> Image = CreateBrush(FName(*Request->GetURL()), ImageData);
+		//FSlateDynamicImageBrush Img = (FSlateDynamicImageBrush) *Image.Get();
+		for(const TPair<FString, FString>&pair: ReferenceImage){
+			if(pair.Key.Equals(Request->GetURL())){
+				UBook::SpeciesImageDictionary.Add(pair.Value, Image);
+			} 
+		}
+	}
+}
+TSharedPtr<FSlateDynamicImageBrush> UBerwickshireRequestHandler::CreateBrush(FName ResourceName, TArray<uint8> ImageData){
+	TSharedPtr<FSlateDynamicImageBrush> Brush;
+	uint32 BytesPerPixel=4;
+	int32 Width = 0;
+	int32 Height = 0;
+	bool bSucceeded = false;
+     TArray<uint8> DecodedImage;
+     IImageWrapperModule& ImageWrapperModule = FModuleManager::LoadModuleChecked<IImageWrapperModule>(FName("ImageWrapper"));
+     IImageWrapperPtr ImageWrapper = ImageWrapperModule.CreateImageWrapper(EImageFormat::JPEG);
+ 
+     if (ImageWrapper.IsValid() && ImageWrapper->SetCompressed(ImageData.GetData(), ImageData.Num()))
+     {
+         Width = ImageWrapper->GetWidth();
+         Height = ImageWrapper->GetHeight();
+ 
+        TArray<uint8> RawData;
+ 
+         if (ImageWrapper->GetRaw(ERGBFormat::RGBA, 8, RawData))
+         {
+             DecodedImage = RawData;
+             bSucceeded = true;
+         }
+     }
+ 
+     if (bSucceeded && FSlateApplication::Get().GetRenderer()->GenerateDynamicImageResource(ResourceName, ImageWrapper->GetWidth(), ImageWrapper->GetHeight(), DecodedImage))
+     {
+         Brush = MakeShareable(new FSlateDynamicImageBrush(ResourceName, FVector2D(ImageWrapper->GetWidth(), ImageWrapper->GetHeight())));
+     }
+ 
+     return Brush;
+
+}
 
 void UBerwickshireRequestHandler::CreateMap(){
 	ReferenceMap.Add(68, "Seal"); //Grey Seals
@@ -130,4 +198,5 @@ void UBerwickshireRequestHandler::CreateMap(){
 	ReferenceMap.Add(61,"Crab"); //Grey Seals
 	ReferenceMap.Add(48,"Lobster"); //Grey Seals
 	ReferenceMap.Add(51,"Jellyfish"); //Grey Seals
+	ReferenceImage.Add("https://www.berwickshiremarinereserve.uk/omeka/files/square_thumbnails/160/Lawson_Wood_DSC_0021_Grey_Seal.jpg","Seal");
 }

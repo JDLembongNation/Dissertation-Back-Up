@@ -7,6 +7,8 @@
 #include "Book.h"
 #include "Runtime/Online/HTTP/Public/Http.h"
 #include "Brushes/SlateDynamicImageBrush.h"
+#include "IImageWrapper.h"
+#include "IImageWrapperModule.h"
 #include "BerwickshireRequestHandler.generated.h"
 
 
@@ -26,6 +28,7 @@ protected:
 public:	
 	// Called every frame
 	TMap<int32, FString> ReferenceMap; //Combines Ref number with Tag Name
+	TMap<FString, FString> ReferenceImage;
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	FHttpModule* Http;
 	/* The actual HTTP call */
@@ -37,5 +40,7 @@ public:
 	void ProcessJSON(TSharedPtr<FJsonObject> JsonObject);
 	void CreateMap();
 	FString SplitString(FString input);
-	TSharedPtr<FSlateDynamicImageBrush> CallForImage();
+	void CallForImage(FString url);
+	void  OnImageReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
+	TSharedPtr<FSlateDynamicImageBrush> CreateBrush(FName ResourceName, TArray<uint8> ImageData);
 };

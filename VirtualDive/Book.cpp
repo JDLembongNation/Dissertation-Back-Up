@@ -20,6 +20,8 @@ void UBook::BeginPlay()
 	
 }
 TMap<FString, UBook::Species> UBook::SpeciesDictionary;
+TMap<FString, TSharedPtr<FSlateDynamicImageBrush>> UBook::SpeciesImageDictionary;
+
 
 
 

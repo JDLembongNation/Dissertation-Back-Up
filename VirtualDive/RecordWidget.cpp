@@ -9,9 +9,10 @@ void URecordWidget::NativeConstruct(){
     Super::NativeConstruct();
 }
 
-void URecordWidget::DisplayAnimal(FString Name, FString Description, FString ImageLink){
+void URecordWidget::DisplayAnimal(FString Name, FString Tag,FString Description, FString ImageLink){
     AnimalTitle->SetText(FText::FromString(Name));
     AnimalDescription->SetText(FText::FromString(Description));
+    AnimalImage->SetBrush(*UBook::SpeciesImageDictionary[Tag].Get());
 }
 
 void URecordWidget::ActivateLeftArrow(){

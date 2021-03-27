@@ -22,7 +22,7 @@ class VIRTUALDIVE_API AInGameHUD : public AHUD
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaSeconds) override; 
 	UFUNCTION()
-	void DisplayAnimal(FString Name, FString Description, FString ImageLink);
+	void DisplayAnimal(FString Name, FString Tag,FString Description, FString ImageLink);
 	UFUNCTION()
 	void OpenBook();
 	UFUNCTION()

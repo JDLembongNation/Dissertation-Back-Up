@@ -24,9 +24,9 @@ void AInGameHUD::Tick(float DeltaSeconds){
 void AInGameHUD::DrawHUD(){
     Super::DrawHUD();
 }
-void AInGameHUD::DisplayAnimal(FString Name, FString Description, FString ImageLink){
+void AInGameHUD::DisplayAnimal(FString Name, FString Tag,FString Description, FString ImageLink){
     if(RecordWidget){
-        RecordWidget->DisplayAnimal(Name, Description, ImageLink);
+        RecordWidget->DisplayAnimal(Name, Tag,Description, ImageLink);
     }
 }
 void AInGameHUD::OpenBook(){

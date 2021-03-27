@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-
+#include "Book.h"
 #include "Runtime/UMG/Public/UMG.h"
 #include "RecordWidget.generated.h"
 
@@ -18,7 +18,7 @@ class VIRTUALDIVE_API URecordWidget : public UUserWidget
 	public: 
 	URecordWidget(const FObjectInitializer& ObjectInitializer);
 	virtual void NativeConstruct() override; 
-	void DisplayAnimal(FString Name, FString Description, FString ImageLink);
+	void DisplayAnimal(FString Name, FString Tag, FString Description, FString ImageLink);
 	void OpenBook();
 	void CloseBook();
 	bool AttachedUI();
