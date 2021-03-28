@@ -15,6 +15,12 @@ void AInGameHUD::BeginPlay(){
             RecordWidget->AddToViewport();
         }
     }
+    if(AnimalNotificationWidgetClass){
+        AnimalNotificationWidget = CreateWidget<UAnimalNotificationWidget>(GetWorld(), AnimalNotificationWidgetClass);
+        if(AnimalNotificationWidget){
+            AnimalNotificationWidget->AddToViewport();
+        }
+    }
 }
 
 void AInGameHUD::Tick(float DeltaSeconds){
@@ -52,5 +58,25 @@ void AInGameHUD::ActivateLeftArrow(){
 void AInGameHUD::ActivateRightArrow(){
     if(RecordWidget){
         RecordWidget->ActivateRightArrow();
+    }
+}
+void AInGameHUD::GenerateRemainingAnimals(){
+    if(AnimalNotificationWidget){
+        AnimalNotificationWidget->GenerateRemainingAnimals();
+    }
+}
+void AInGameHUD::DisplayNotification(){
+    if(AnimalNotificationWidget){
+        AnimalNotificationWidget->DisplayNotification();
+    }
+}
+void AInGameHUD::CloseNotification(){
+    if(AnimalNotificationWidget){
+        AnimalNotificationWidget->CloseNotification();
+    }
+}
+void AInGameHUD::RemoveAnimalFromList(FString Name){
+    if(AnimalNotificationWidget){
+        AnimalNotificationWidget->RemoveAnimalFromList(Name);
     }
 }

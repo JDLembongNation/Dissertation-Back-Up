@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "Book.h"
+#include "InGameHud.h"
+
 #include "CaptureCamera.generated.h"
 
 
@@ -35,6 +37,7 @@ private:
 	TArray<AActor*> FoundActors;
 	float Range = 1500.f; //Change if necessary. 
 	FVector LineTraceEnd;
+	AInGameHUD* InGameHUD;
 	UFUNCTION(BlueprintCallable, Category="Capture")
 	void CaptureShot();
 
@@ -46,6 +49,8 @@ private:
 	void UpdateDetailsNext();
 	void UpdateDetailsPrevious();
 	void ProcessFirstAnimal();
+	void CallNotification(bool Open);
+	void ShowCheckList();
 	int32 Reference = -1; //The book position in the speciesList.
 
 };

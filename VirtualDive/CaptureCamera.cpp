@@ -6,7 +6,6 @@
 #include "Engine/GameViewportClient.h"
 #include "GameFramework/PlayerController.h"
 #include "DrawDebugHelpers.h"
-#include "InGameHud.h"
 #include "Book.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 
@@ -35,10 +34,11 @@ void UCaptureCamera::BeginPlay()
 		InputComponent->BindAction("RecordLeft",IE_Pressed, this, &UCaptureCamera::UpdateDetailsPrevious);
 		InputComponent->BindAction("RecordRight", IE_Pressed, this, &UCaptureCamera::UpdateDetailsNext);
 	}
-	AInGameHUD* InGameHUD = Cast<AInGameHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+	InGameHUD = Cast<AInGameHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 	if(InGameHUD){
 		InGameHUD->CloseBook();
 	} 
+	CallNotification(false);
 
 }
 
@@ -68,6 +68,7 @@ void UCaptureCamera::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 	*/
 	DetectAnimal();
 	ProcessSighting();
+	ShowCheckList();
 }
 
 
@@ -80,11 +81,11 @@ void UCaptureCamera::CaptureShot(){
 }
 
 void UCaptureCamera::ToggleRecords(){
-	AInGameHUD* InGameHUD = Cast<AInGameHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 	if(InGameHUD){
 			UE_LOG(LogTemp, Warning, TEXT("RECORD TOGGLING"));
 		IsRecordViewable = !IsRecordViewable;
 		if(IsRecordViewable){
+			CallNotification(false);
 			if(SeenAnimals.Num() == 0) InGameHUD->OpenInfo();
 			else InGameHUD->OpenBook();		
 		}
@@ -110,18 +111,20 @@ void UCaptureCamera::ProcessSighting(){
 	AActor* ActorHit = AnimalActor.GetActor();
 	if(ActorHit){
 		TArray<FName> Tags = ActorHit->Tags;
-		if(Tags.Contains("Animal") || Tags.Contains("Plant")){
+		if(Tags.Contains("Animal")){ // || Tags.Contains("Plant") add if necessary
 			TArray<FName> AnimalTag = Tags; 
 			if(Tags.Contains("Animal"))AnimalTag.Remove("Animal");
 			if(Tags.Contains("Plant"))AnimalTag.Remove("Plant");
 			if(AnimalTag.Num() > 0){
 				FName Identifier = AnimalTag.Pop(); //There are only two tags. First is the animal identifier, second is the animal. 
 				if(!SeenAnimals.Contains(Identifier.ToString())){ 
+					CallNotification(true);
 					UE_LOG(LogTemp, Warning, TEXT("%s added to list of sighting entries!"), *Identifier.ToString());
 					struct UBook::Species Specimen; 
 					UBook::GetEntryFromTag(Identifier.ToString(), Specimen);
 					SeenAnimals.Add(Identifier.ToString());
 					SpeciesList.Add(Specimen);
+					InGameHUD->RemoveAnimalFromList(Specimen.SpeciesName);
 					if(SeenAnimals.Num() == 1) ProcessFirstAnimal();
 				}
 			}else{
@@ -132,7 +135,6 @@ void UCaptureCamera::ProcessSighting(){
 }
 
 void UCaptureCamera::ProcessFirstAnimal(){
-	AInGameHUD* InGameHUD = Cast<AInGameHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 	if(InGameHUD){
 		InGameHUD->DisplayAnimal(SpeciesList[0].SpeciesName,
 									SpeciesList[0].SpeciesTag,
@@ -141,6 +143,18 @@ void UCaptureCamera::ProcessFirstAnimal(){
 	}
 
 }
+void UCaptureCamera::CallNotification(bool Open){
+	if(InGameHUD){
+		if(Open) InGameHUD->DisplayNotification(); 	
+		else InGameHUD->CloseNotification();
+	}
+}
+void UCaptureCamera::ShowCheckList(){
+	if(InGameHUD){
+		InGameHUD->GenerateRemainingAnimals(); 
+	}
+}
+
 FVector UCaptureCamera::GetPlayerLocation(){
 	FVector PlayerViewPointLocation; 
 	FRotator PlayerViewPointRotation;
@@ -165,7 +179,6 @@ FRotator UCaptureCamera::GetPlayerRotation(){
 void UCaptureCamera::UpdateDetailsNext(){
 	if(IsRecordViewable && SpeciesList.Num() > 0 && (SpeciesList.Num() > Reference+1)){
 		Reference++;
-		AInGameHUD* InGameHUD = Cast<AInGameHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 		if(InGameHUD){
 			InGameHUD->DisplayAnimal(SpeciesList[Reference].SpeciesName,
 									SpeciesList[Reference].SpeciesTag,
@@ -178,7 +191,6 @@ void UCaptureCamera::UpdateDetailsNext(){
 void UCaptureCamera::UpdateDetailsPrevious(){
 	if(IsRecordViewable && SpeciesList.Num() > 0 && (Reference > 0)){
 		Reference--;
-		AInGameHUD* InGameHUD = Cast<AInGameHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 		if(InGameHUD){
 			InGameHUD->DisplayAnimal(SpeciesList[Reference].SpeciesName,
 									SpeciesList[Reference].SpeciesTag,

@@ -24,7 +24,6 @@ TMap<FString, TSharedPtr<FSlateDynamicImageBrush>> UBook::SpeciesImageDictionary
 
 
 
-
 // Called every frame
 void UBook::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {

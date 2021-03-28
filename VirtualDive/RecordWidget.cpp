@@ -22,7 +22,6 @@ void URecordWidget::ActivateRightArrow(){
     if(AttachedUI()) RightArrowImage->SetVisibility(ESlateVisibility::Visible);
 }
 
-
 void URecordWidget::OpenInfo(){
     if(AttachedUI()){
         AnimalDescription->SetVisibility(ESlateVisibility::Visible);

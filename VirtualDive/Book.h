@@ -33,4 +33,5 @@ public:
 	static TMap<FString, TSharedPtr<FSlateDynamicImageBrush>> SpeciesImageDictionary;
 	static TMap<FString, Species> SpeciesDictionary;
 	static void GetEntryFromTag(FString identifier, Species& specimen); //Tag is not the same as epciesName. need separate Map to convert the two.
+
 };

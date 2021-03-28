@@ -77,7 +77,7 @@ void UBerwickshireRequestHandler::OnResponseReceived(FHttpRequestPtr Request, FH
 	if (FJsonSerializer::Deserialize(Reader, JsonObject))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("SUCCESSFULLY PUlled from Local Database"));
-		ProcessJSON(JsonObject);
+		ProcessJSON(JsonObject);	
 	}
 	}
 }

@@ -6,6 +6,7 @@
 #include "GameFramework/HUD.h"
 #include "Components/WidgetComponent.h"
 #include "RecordWidget.h"
+#include "AnimalNotificationWidget.h"
 #include "InGameHUD.generated.h"
 
 /**
@@ -33,10 +34,21 @@ class VIRTUALDIVE_API AInGameHUD : public AHUD
 	void ActivateLeftArrow();
 	UFUNCTION()
 	void ActivateRightArrow();
+	UFUNCTION()
+	void GenerateRemainingAnimals(); //Will change the text in the AnimalList Box. Call only once speciesImageIDcitonary = Referencemap length
+	UFUNCTION()
+	void DisplayNotification(); 
+	UFUNCTION()
+	void CloseNotification();
+	UFUNCTION()
+	void RemoveAnimalFromList(FString Name); 
 
 	UPROPERTY(EditDefaultsOnly, Category="Widgets")
 	TSubclassOf<UUserWidget> RecordWidgetClass;
+	UPROPERTY(EditDefaultsOnly, Category="Widgets")
+	TSubclassOf<UUserWidget> AnimalNotificationWidgetClass;
 private: 
 	URecordWidget* RecordWidget;
+	UAnimalNotificationWidget* AnimalNotificationWidget;
 
 };
