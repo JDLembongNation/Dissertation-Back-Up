@@ -123,9 +123,9 @@ void UBerwickshireRequestHandler::ProcessJSON(TSharedPtr<FJsonObject> JsonObject
 
 FString UBerwickshireRequestHandler::SplitString(FString input){
 	FString newString = "";
-	for(int32 i = 0; i < input.Len(); i+=70){
-		if(input.Len()-1 >= i+70){
-			newString+=input.Mid(i, 70);
+	for(int32 i = 0; i < input.Len(); i+=60){
+		if(input.Len()-1 >= i+60){
+			newString+=input.Mid(i, 60);
 			newString+="\n ";
 			//add full
 		}else{

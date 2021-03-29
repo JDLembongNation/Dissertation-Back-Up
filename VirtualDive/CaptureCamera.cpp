@@ -33,12 +33,14 @@ void UCaptureCamera::BeginPlay()
 		InputComponent->BindAction("OpenRecords", IE_Pressed, this, &UCaptureCamera::ToggleRecords);
 		InputComponent->BindAction("RecordLeft",IE_Pressed, this, &UCaptureCamera::UpdateDetailsPrevious);
 		InputComponent->BindAction("RecordRight", IE_Pressed, this, &UCaptureCamera::UpdateDetailsNext);
+		InputComponent->BindAction("ToggleInstructions", IE_Pressed, this, &UCaptureCamera::ToggleInstructions);
 	}
 	InGameHUD = Cast<AInGameHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 	if(InGameHUD){
 		InGameHUD->CloseBook();
 	} 
 	CallNotification(false);
+	ToggleInstructions();
 
 }
 
@@ -71,9 +73,21 @@ void UCaptureCamera::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 	ShowCheckList();
 }
 
+void UCaptureCamera::ToggleInstructions(){
+	if(InGameHUD){
+	UE_LOG(LogTemp, Warning, TEXT("WASAP"));
+	IsInstructionsClosed = !IsInstructionsClosed;
+	if(!IsInstructionsClosed){
+		UE_LOG(LogTemp, Warning, TEXT("WASAP3"));
+		InGameHUD->OpenInstructionPanel();
+	}else{
+		InGameHUD->CloseInstructionPanel();
+	}
+	}
+}
 
 void UCaptureCamera::CaptureShot(){
-	UE_LOG(LogTemp, Warning, TEXT("SCREENSHOT CALLED!!!"));
+	UE_LOG(LogTemp, Warning, TEXT("Screenshot Captured"));
 	APlayerController* PController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	if(PController){
 		PController->ConsoleCommand(TEXT("HighResShot 2"), true); 
@@ -82,7 +96,6 @@ void UCaptureCamera::CaptureShot(){
 
 void UCaptureCamera::ToggleRecords(){
 	if(InGameHUD){
-			UE_LOG(LogTemp, Warning, TEXT("RECORD TOGGLING"));
 		IsRecordViewable = !IsRecordViewable;
 		if(IsRecordViewable){
 			CallNotification(false);

@@ -6,6 +6,7 @@
 #include "GameFramework/HUD.h"
 #include "Components/WidgetComponent.h"
 #include "RecordWidget.h"
+#include "InstructionsWidget.h"
 #include "AnimalNotificationWidget.h"
 #include "InGameHUD.generated.h"
 
@@ -42,13 +43,20 @@ class VIRTUALDIVE_API AInGameHUD : public AHUD
 	void CloseNotification();
 	UFUNCTION()
 	void RemoveAnimalFromList(FString Name); 
+	UFUNCTION()
+	void OpenInstructionPanel();
+	UFUNCTION()
+	void CloseInstructionPanel();
 
 	UPROPERTY(EditDefaultsOnly, Category="Widgets")
 	TSubclassOf<UUserWidget> RecordWidgetClass;
 	UPROPERTY(EditDefaultsOnly, Category="Widgets")
 	TSubclassOf<UUserWidget> AnimalNotificationWidgetClass;
+	UPROPERTY(EditDefaultsOnly, Category="Widgets")
+	TSubclassOf<UUserWidget> InstructionsWidgetClass;
 private: 
 	URecordWidget* RecordWidget;
 	UAnimalNotificationWidget* AnimalNotificationWidget;
+	UInstructionsWidget* InstructionsWidget;
 
 };

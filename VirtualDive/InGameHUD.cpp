@@ -21,6 +21,12 @@ void AInGameHUD::BeginPlay(){
             AnimalNotificationWidget->AddToViewport();
         }
     }
+    if(InstructionsWidgetClass){
+        InstructionsWidget = CreateWidget<UInstructionsWidget>(GetWorld(), InstructionsWidgetClass);
+        if(InstructionsWidget){        
+            InstructionsWidget->AddToViewport();
+        }
+    }
 }
 
 void AInGameHUD::Tick(float DeltaSeconds){
@@ -78,5 +84,18 @@ void AInGameHUD::CloseNotification(){
 void AInGameHUD::RemoveAnimalFromList(FString Name){
     if(AnimalNotificationWidget){
         AnimalNotificationWidget->RemoveAnimalFromList(Name);
+    }
+}
+
+void AInGameHUD::OpenInstructionPanel(){
+    UE_LOG(LogTemp, Warning, TEXT("WASAP2"));
+    if(InstructionsWidget){
+        InstructionsWidget->OpenInstructionPanel();
+    }
+}
+
+void AInGameHUD::CloseInstructionPanel(){
+    if(InstructionsWidget){
+        InstructionsWidget->CloseInstructionPanel();
     }
 }

@@ -38,6 +38,7 @@ private:
 	float Range = 1500.f; //Change if necessary. 
 	FVector LineTraceEnd;
 	AInGameHUD* InGameHUD;
+	bool IsInstructionsClosed = true;
 	UFUNCTION(BlueprintCallable, Category="Capture")
 	void CaptureShot();
 
@@ -51,6 +52,7 @@ private:
 	void ProcessFirstAnimal();
 	void CallNotification(bool Open);
 	void ShowCheckList();
+	void ToggleInstructions();
 	int32 Reference = -1; //The book position in the speciesList.
 
 };

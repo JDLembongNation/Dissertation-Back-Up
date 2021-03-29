@@ -39,4 +39,5 @@ class VIRTUALDIVE_API UAnimalNotificationWidget : public UUserWidget
 	int32 NumberOfExhibits = 9;
 	bool finishedLoading = false;
 	
+	
 };
