@@ -6,8 +6,13 @@
 #include "Components/ActorComponent.h"
 #include "Book.h"
 #include "Runtime/Online/HTTP/Public/Http.h"
+#include "Runtime/ImageWrapper/Public/IImageWrapper.h"
+#include "Runtime/ImageWrapper/Public/IImageWrapperModule.h"
+#include "Runtime/Core/Public/HAL/PlatformFilemanager.h"
+#include "Runtime/Engine/Classes/Engine/Texture2D.h"
 #include "Brushes/SlateDynamicImageBrush.h"
 #include "IImageWrapper.h"
+#include "Slate/SlateGameResources.h"
 #include "IImageWrapperModule.h"
 #include "BerwickshireRequestHandler.generated.h"
 
@@ -43,4 +48,5 @@ public:
 	void CallForImage(FString url);
 	void  OnImageReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
 	TSharedPtr<FSlateDynamicImageBrush> CreateBrush(FName ResourceName, TArray<uint8> ImageData);
+	TSharedPtr<FSlateDynamicImageBrush> CreateLocalBrushes(FString Tag);
 };

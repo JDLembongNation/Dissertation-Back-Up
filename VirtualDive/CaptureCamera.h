@@ -53,6 +53,7 @@ private:
 	void CallNotification(bool Open);
 	void ShowCheckList();
 	void ToggleInstructions();
+	void DisplayArrows();
 	int32 Reference = -1; //The book position in the speciesList.
 
 };

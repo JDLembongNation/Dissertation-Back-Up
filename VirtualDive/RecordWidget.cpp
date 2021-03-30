@@ -21,6 +21,12 @@ void URecordWidget::ActivateLeftArrow(){
 void URecordWidget::ActivateRightArrow(){
     if(AttachedUI()) RightArrowImage->SetVisibility(ESlateVisibility::Visible);
 }
+void URecordWidget::DisableLeftArrow(){
+    if(AttachedUI()) LeftArrowImage->SetVisibility(ESlateVisibility::Hidden);
+}
+void URecordWidget::DisableRightArrow(){
+    if(AttachedUI()) RightArrowImage->SetVisibility(ESlateVisibility::Hidden);
+}
 
 void URecordWidget::OpenInfo(){
     if(AttachedUI()){

@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "Brushes/SlateDynamicImageBrush.h"
+#include "Styling/SlateBrush.h"
 #include "Book.generated.h"
 
 

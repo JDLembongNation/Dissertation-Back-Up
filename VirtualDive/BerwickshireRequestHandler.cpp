@@ -147,15 +147,52 @@ void UBerwickshireRequestHandler::CallForImage(FString url){
 void UBerwickshireRequestHandler::OnImageReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful){
 	if(bWasSuccessful && Response.IsValid()){
 		TArray<uint8> ImageData = Response->GetContent();
-		TSharedPtr<FSlateDynamicImageBrush> Image = CreateBrush(FName(*Request->GetURL()), ImageData);
+		TSharedPtr<FSlateDynamicImageBrush> Image = CreateBrush(FName(*Request->GetURL()), ImageData); //have null check.
 		UE_LOG(LogTemp, Warning, TEXT("Brush Created"));
-		//FSlateDynamicImageBrush Img = (FSlateDynamicImageBrush) *Image.Get();
 		for(const TPair<FString, FString>&pair: ReferenceImage){
 			if(pair.Key.Equals(Request->GetURL())){
+				if(Image == NULL){
+					Image = CreateLocalBrushes(pair.Value);
+				}
 				UBook::SpeciesImageDictionary.Add(pair.Value, Image);
-			} 
+				} 
 		}
 	}
+}
+
+TSharedPtr<FSlateDynamicImageBrush> UBerwickshireRequestHandler::CreateLocalBrushes(FString Tag){
+		TSharedPtr<FSlateDynamicImageBrush> Brush;
+	uint32 BytesPerPixel=4;
+	int32 Width = 0;
+	int32 Height = 0;
+	bool bSucceeded = false;
+	TArray<uint8> CompressedDataImage;
+	TArray<uint8> DecodedImage;
+	FString ImageName = Tag+"_Brush.jpeg";
+	FString ImagePath = FPaths::ProjectContentDir() + "Images/" + ImageName;
+	FFileHelper::LoadFileToArray(CompressedDataImage, *ImagePath);
+	IImageWrapperModule& ImageWrapperModule = FModuleManager::LoadModuleChecked<IImageWrapperModule>(FName("ImageWrapper"));
+     IImageWrapperPtr ImageWrapper = ImageWrapperModule.CreateImageWrapper(EImageFormat::JPEG);
+	 if (ImageWrapper.IsValid() && ImageWrapper->SetCompressed(CompressedDataImage.GetData(), CompressedDataImage.Num()))
+     {
+         Width = ImageWrapper->GetWidth();
+         Height = ImageWrapper->GetHeight();
+
+        TArray<uint8> RawData;
+ 
+         if (ImageWrapper->GetRaw(ERGBFormat::RGBA, 8, RawData))
+         {
+             DecodedImage = RawData;
+             bSucceeded = true;
+         }
+     }
+ 
+     if (bSucceeded && FSlateApplication::Get().GetRenderer()->GenerateDynamicImageResource(FName(Tag), ImageWrapper->GetWidth(), ImageWrapper->GetHeight(), DecodedImage))
+     {
+         Brush = MakeShareable(new FSlateDynamicImageBrush(FName(Tag), FVector2D(ImageWrapper->GetWidth(), ImageWrapper->GetHeight())));
+     }
+ 
+     return Brush;
 }
 TSharedPtr<FSlateDynamicImageBrush> UBerwickshireRequestHandler::CreateBrush(FName ResourceName, TArray<uint8> ImageData){
 	TSharedPtr<FSlateDynamicImageBrush> Brush;

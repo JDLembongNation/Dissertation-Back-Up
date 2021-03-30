@@ -25,6 +25,8 @@ class VIRTUALDIVE_API URecordWidget : public UUserWidget
 	void OpenInfo();
 	void ActivateLeftArrow(); //If the player can go left, the left key will emerge.
 	void ActivateRightArrow(); //If the player can go right, the right key will be shown.
+	void DisableLeftArrow();
+	void DisableRightArrow();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 		class UTextBlock* AnimalTitle;

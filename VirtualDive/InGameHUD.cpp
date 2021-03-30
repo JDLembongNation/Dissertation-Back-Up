@@ -66,6 +66,16 @@ void AInGameHUD::ActivateRightArrow(){
         RecordWidget->ActivateRightArrow();
     }
 }
+void AInGameHUD::DisableLeftArrow(){
+    if(RecordWidget){
+        RecordWidget->DisableLeftArrow();
+    }
+}
+void AInGameHUD::DisableRightArrow(){
+    if(RecordWidget){
+        RecordWidget->DisableRightArrow();
+    }
+}
 void AInGameHUD::GenerateRemainingAnimals(){
     if(AnimalNotificationWidget){
         AnimalNotificationWidget->GenerateRemainingAnimals();

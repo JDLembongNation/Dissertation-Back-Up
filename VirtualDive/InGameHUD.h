@@ -36,6 +36,10 @@ class VIRTUALDIVE_API AInGameHUD : public AHUD
 	UFUNCTION()
 	void ActivateRightArrow();
 	UFUNCTION()
+	void DisableLeftArrow();
+	UFUNCTION()
+	void DisableRightArrow();
+	UFUNCTION()
 	void GenerateRemainingAnimals(); //Will change the text in the AnimalList Box. Call only once speciesImageIDcitonary = Referencemap length
 	UFUNCTION()
 	void DisplayNotification(); 

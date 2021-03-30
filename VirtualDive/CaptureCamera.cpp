@@ -71,6 +71,7 @@ void UCaptureCamera::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 	DetectAnimal();
 	ProcessSighting();
 	ShowCheckList();
+	DisplayArrows();
 }
 
 void UCaptureCamera::ToggleInstructions(){
@@ -100,9 +101,26 @@ void UCaptureCamera::ToggleRecords(){
 		if(IsRecordViewable){
 			CallNotification(false);
 			if(SeenAnimals.Num() == 0) InGameHUD->OpenInfo();
-			else InGameHUD->OpenBook();		
+			else{
+				InGameHUD->OpenBook();
+			} 		
 		}
 		else InGameHUD->CloseBook();
+	}
+}
+
+void UCaptureCamera::DisplayArrows(){
+	if(InGameHUD && Reference >=0 && IsRecordViewable){
+		if(Reference > 0){
+			InGameHUD->ActivateLeftArrow();
+		}else{
+			InGameHUD->DisableLeftArrow();
+		}
+		if(Reference < SpeciesList.Num()-1){
+			InGameHUD->ActivateRightArrow();
+		}else{
+			InGameHUD->ActivateLeftArrow();
+		}
 	}
 }
 
