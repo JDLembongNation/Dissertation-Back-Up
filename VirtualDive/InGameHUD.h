@@ -32,6 +32,8 @@ class VIRTUALDIVE_API AInGameHUD : public AHUD
 	UFUNCTION()
 	void OpenInfo();
 	UFUNCTION()
+	void CloseInfo();
+	UFUNCTION()
 	void ActivateLeftArrow();
 	UFUNCTION()
 	void ActivateRightArrow();

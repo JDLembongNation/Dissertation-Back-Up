@@ -57,7 +57,6 @@ void UBerwickshireRequestHandler::OnResponseReceived(FHttpRequestPtr Request, FH
 
 	//Deserialize the json data given Reader and the actual object to deserialize
 	if (FJsonSerializer::Deserialize(Reader, JsonObject)){
-		UE_LOG(LogTemp, Warning, TEXT("SUCCESSFULLY CONNECTED"));
 		ProcessJSON(JsonObject);
 	}
 	FString path = FPaths::ProjectContentDir() + "db/contents.json";
@@ -76,7 +75,6 @@ void UBerwickshireRequestHandler::OnResponseReceived(FHttpRequestPtr Request, FH
 	//Deserialize the json data given Reader and the actual object to deserialize
 	if (FJsonSerializer::Deserialize(Reader, JsonObject))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("SUCCESSFULLY PUlled from Local Database"));
 		ProcessJSON(JsonObject);	
 	}
 	}
@@ -156,6 +154,13 @@ void UBerwickshireRequestHandler::OnImageReceived(FHttpRequestPtr Request, FHttp
 				}
 				UBook::SpeciesImageDictionary.Add(pair.Value, Image);
 				} 
+		}
+	}else{
+		for(const TPair<FString, FString>&pair: ReferenceImage){
+			if(pair.Key.Equals(Request->GetURL())){
+				TSharedPtr<FSlateDynamicImageBrush> Image = CreateLocalBrushes(pair.Value);
+				UBook::SpeciesImageDictionary.Add(pair.Value, Image);
+			}	
 		}
 	}
 }

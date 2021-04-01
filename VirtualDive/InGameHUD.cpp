@@ -51,6 +51,11 @@ void AInGameHUD::OpenInfo(){
         RecordWidget->OpenInfo();
     }
 }
+void AInGameHUD::CloseInfo(){
+    if(RecordWidget){
+        RecordWidget->CloseInfo();
+    }
+} 
 void AInGameHUD::CloseBook(){
     if(RecordWidget){
         RecordWidget->CloseBook();

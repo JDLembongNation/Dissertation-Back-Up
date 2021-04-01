@@ -22,6 +22,7 @@ class VIRTUALDIVE_API URecordWidget : public UUserWidget
 	void OpenBook();
 	void CloseBook();
 	bool AttachedUI();
+	void CloseInfo();
 	void OpenInfo();
 	void ActivateLeftArrow(); //If the player can go left, the left key will emerge.
 	void ActivateRightArrow(); //If the player can go right, the right key will be shown.

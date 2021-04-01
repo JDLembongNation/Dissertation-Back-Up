@@ -119,7 +119,7 @@ void UCaptureCamera::DisplayArrows(){
 		if(Reference < SpeciesList.Num()-1){
 			InGameHUD->ActivateRightArrow();
 		}else{
-			InGameHUD->ActivateLeftArrow();
+			InGameHUD->DisableRightArrow();
 		}
 	}
 }
@@ -143,6 +143,7 @@ void UCaptureCamera::ProcessSighting(){
 	if(ActorHit){
 		TArray<FName> Tags = ActorHit->Tags;
 		if(Tags.Contains("Animal")){ // || Tags.Contains("Plant") add if necessary
+			
 			TArray<FName> AnimalTag = Tags; 
 			if(Tags.Contains("Animal"))AnimalTag.Remove("Animal");
 			if(Tags.Contains("Plant"))AnimalTag.Remove("Plant");
@@ -156,7 +157,10 @@ void UCaptureCamera::ProcessSighting(){
 					SeenAnimals.Add(Identifier.ToString());
 					SpeciesList.Add(Specimen);
 					InGameHUD->RemoveAnimalFromList(Specimen.SpeciesName);
-					if(SeenAnimals.Num() == 1) ProcessFirstAnimal();
+					if(SeenAnimals.Num() == 1){
+						InGameHUD->CloseInfo();
+						ProcessFirstAnimal();	
+					}
 				}
 			}else{
 				UE_LOG(LogTemp, Error, TEXT("An Associated Animal Tag has not been initialized with the %s object!"), *ActorHit->GetName());

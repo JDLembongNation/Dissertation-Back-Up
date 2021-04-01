@@ -36,6 +36,11 @@ void URecordWidget::OpenInfo(){
         BackgroundImage->SetVisibility(ESlateVisibility::Hidden);
     }
 }
+void URecordWidget::CloseInfo(){
+    if(AttachedUI()){
+        AnimalDescription->SetVisibility(ESlateVisibility::Hidden);
+    }
+}
 void URecordWidget::OpenBook(){
     if(AttachedUI()){
         AnimalTitle->SetVisibility(ESlateVisibility::Visible);

@@ -30,9 +30,9 @@ FString UInstructionsWidget::WriteInstructions(){
     FString text = "";
     text+="Hello! Welcome to the Virtual Dive Experience Simulator! \n";
     text+="Get up close to the animals to obtain details about them! \n";
-    text+="Take a screenshot with 'm'\n";
-    text+="Toggle the records journal with 'p' \n";
-    text+="Toggle this instruction panel with 'i' \n";
+    text+="Take a screenshot with 'M'\n";
+    text+="Toggle the records journal with 'P' \n";
+    text+="Toggle this instruction panel with 'L' \n";
     text+=" Have fun! \n";
     return text;
 }
