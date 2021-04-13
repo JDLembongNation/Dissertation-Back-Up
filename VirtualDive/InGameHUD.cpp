@@ -103,7 +103,6 @@ void AInGameHUD::RemoveAnimalFromList(FString Name){
 }
 
 void AInGameHUD::OpenInstructionPanel(){
-    UE_LOG(LogTemp, Warning, TEXT("WASAP2"));
     if(InstructionsWidget){
         InstructionsWidget->OpenInstructionPanel();
     }

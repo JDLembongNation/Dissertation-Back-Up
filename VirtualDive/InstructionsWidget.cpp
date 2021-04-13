@@ -9,7 +9,6 @@ void UInstructionsWidget::NativeConstruct(){
 }
 
 void UInstructionsWidget::OpenInstructionPanel(){
-    UE_LOG(LogTemp, Warning, TEXT("PEYSAR"));
     if(AttachedUI()){
         IntroductionText->SetVisibility(ESlateVisibility::Visible);
         BackgroundImage->SetVisibility(ESlateVisibility::Visible);
@@ -33,6 +32,7 @@ FString UInstructionsWidget::WriteInstructions(){
     text+="Take a screenshot with 'M'\n";
     text+="Toggle the records journal with 'P' \n";
     text+="Toggle this instruction panel with 'L' \n";
+    text+="Press 'esc' button to quit the application \n";
     text+=" Have fun! \n";
     return text;
 }

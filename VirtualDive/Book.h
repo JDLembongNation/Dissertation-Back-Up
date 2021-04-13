@@ -29,7 +29,6 @@ public:
 		FString SpeciesName;
 		FString SpeciesTag;
 		FString SpeciesDescription;
-		FString SpeciesImageLink;
 	};
 	static TMap<FString, TSharedPtr<FSlateDynamicImageBrush>> SpeciesImageDictionary;
 	static TMap<FString, Species> SpeciesDictionary;

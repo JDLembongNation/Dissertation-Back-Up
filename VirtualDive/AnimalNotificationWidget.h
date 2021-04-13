@@ -36,7 +36,7 @@ class VIRTUALDIVE_API UAnimalNotificationWidget : public UUserWidget
 	TArray<FString> CheckList;
 	bool AttachedUI();
 	FString GenerateStringList();
-	int32 NumberOfExhibits = 9;
+	int32 NumberOfExhibits = 8;
 	bool finishedLoading = false;
 	
 	

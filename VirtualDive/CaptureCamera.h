@@ -48,12 +48,14 @@ private:
 	void DetectAnimal(); 
 	void ToggleRecords();
 	void UpdateDetailsNext();
+	void ShowNextAnimal();
 	void UpdateDetailsPrevious();
 	void ProcessFirstAnimal();
 	void CallNotification(bool Open);
 	void ShowCheckList();
 	void ToggleInstructions();
 	void DisplayArrows();
+	void QuitGame();
 	int32 Reference = -1; //The book position in the speciesList.
 
 };

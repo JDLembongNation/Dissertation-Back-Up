@@ -105,7 +105,6 @@ void UBerwickshireRequestHandler::ProcessJSON(TSharedPtr<FJsonObject> JsonObject
 		if(records.Num() > 0){
 			val = "";
 			val.AppendInt(records[0]->AsNumber());
-			UE_LOG(LogTemp, Warning, TEXT("%s IS USED"), *val);
 			TSharedPtr<FJsonObject> AnimalSpec = ItemObject->GetObjectField(val);
 			if(AnimalSpec->HasField("squarethumbs")){
 			TArray<TSharedPtr<FJsonValue>> ImageList = AnimalSpec->GetArrayField("squarethumbs");
@@ -166,14 +165,14 @@ void UBerwickshireRequestHandler::OnImageReceived(FHttpRequestPtr Request, FHttp
 }
 
 TSharedPtr<FSlateDynamicImageBrush> UBerwickshireRequestHandler::CreateLocalBrushes(FString Tag){
-		TSharedPtr<FSlateDynamicImageBrush> Brush;
+	TSharedPtr<FSlateDynamicImageBrush> Brush;
 	uint32 BytesPerPixel=4;
 	int32 Width = 0;
 	int32 Height = 0;
 	bool bSucceeded = false;
 	TArray<uint8> CompressedDataImage;
 	TArray<uint8> DecodedImage;
-	FString ImageName = Tag+"_Brush.jpeg";
+	FString ImageName = Tag+".jpeg";
 	FString ImagePath = FPaths::ProjectContentDir() + "Images/" + ImageName;
 	FFileHelper::LoadFileToArray(CompressedDataImage, *ImagePath);
 	IImageWrapperModule& ImageWrapperModule = FModuleManager::LoadModuleChecked<IImageWrapperModule>(FName("ImageWrapper"));
@@ -194,11 +193,14 @@ TSharedPtr<FSlateDynamicImageBrush> UBerwickshireRequestHandler::CreateLocalBrus
  
      if (bSucceeded && FSlateApplication::Get().GetRenderer()->GenerateDynamicImageResource(FName(Tag), ImageWrapper->GetWidth(), ImageWrapper->GetHeight(), DecodedImage))
      {
+		 UE_LOG(LogTemp, Warning, TEXT("Local Brush Created.."));
          Brush = MakeShareable(new FSlateDynamicImageBrush(FName(Tag), FVector2D(ImageWrapper->GetWidth(), ImageWrapper->GetHeight())));
      }
  
      return Brush;
 }
+
+//Code was modifed from https://answers.unrealengine.com/questions/255871/httprest-download-images-in-c.html
 TSharedPtr<FSlateDynamicImageBrush> UBerwickshireRequestHandler::CreateBrush(FName ResourceName, TArray<uint8> ImageData){
 	TSharedPtr<FSlateDynamicImageBrush> Brush;
 	uint32 BytesPerPixel=4;
@@ -241,5 +243,4 @@ void UBerwickshireRequestHandler::CreateMap(){
 	ReferenceMap.Add(61,"Crab"); //Grey Seals
 	ReferenceMap.Add(48,"Lobster"); //Grey Seals
 	ReferenceMap.Add(51,"Jellyfish"); //Grey Seals
-	ReferenceMap.Add(423, "Kelp"); //Need to be targeted a different way. 
 }

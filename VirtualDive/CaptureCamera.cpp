@@ -34,6 +34,7 @@ void UCaptureCamera::BeginPlay()
 		InputComponent->BindAction("RecordLeft",IE_Pressed, this, &UCaptureCamera::UpdateDetailsPrevious);
 		InputComponent->BindAction("RecordRight", IE_Pressed, this, &UCaptureCamera::UpdateDetailsNext);
 		InputComponent->BindAction("ToggleInstructions", IE_Pressed, this, &UCaptureCamera::ToggleInstructions);
+		InputComponent->BindAction("Exit", IE_Pressed, this, &UCaptureCamera::QuitGame);
 	}
 	InGameHUD = Cast<AInGameHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 	if(InGameHUD){
@@ -76,10 +77,8 @@ void UCaptureCamera::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 
 void UCaptureCamera::ToggleInstructions(){
 	if(InGameHUD){
-	UE_LOG(LogTemp, Warning, TEXT("WASAP"));
 	IsInstructionsClosed = !IsInstructionsClosed;
 	if(!IsInstructionsClosed){
-		UE_LOG(LogTemp, Warning, TEXT("WASAP3"));
 		InGameHUD->OpenInstructionPanel();
 	}else{
 		InGameHUD->CloseInstructionPanel();
@@ -142,15 +141,15 @@ void UCaptureCamera::ProcessSighting(){
 	AActor* ActorHit = AnimalActor.GetActor();
 	if(ActorHit){
 		TArray<FName> Tags = ActorHit->Tags;
-		if(Tags.Contains("Animal")){ // || Tags.Contains("Plant") add if necessary
-			
+		if(Tags.Contains("Animal")){ 
 			TArray<FName> AnimalTag = Tags; 
-			if(Tags.Contains("Animal"))AnimalTag.Remove("Animal");
-			if(Tags.Contains("Plant"))AnimalTag.Remove("Plant");
+			AnimalTag.Remove("Animal");
 			if(AnimalTag.Num() > 0){
 				FName Identifier = AnimalTag.Pop(); //There are only two tags. First is the animal identifier, second is the animal. 
 				if(!SeenAnimals.Contains(Identifier.ToString())){ 
-					CallNotification(true);
+					if (!IsRecordViewable) {
+						CallNotification(true);
+					}
 					UE_LOG(LogTemp, Warning, TEXT("%s added to list of sighting entries!"), *Identifier.ToString());
 					struct UBook::Species Specimen; 
 					UBook::GetEntryFromTag(Identifier.ToString(), Specimen);
@@ -160,6 +159,12 @@ void UCaptureCamera::ProcessSighting(){
 					if(SeenAnimals.Num() == 1){
 						InGameHUD->CloseInfo();
 						ProcessFirstAnimal();	
+					}else{
+						if(IsRecordViewable){
+							UpdateDetailsNext();
+						}else{
+							ShowNextAnimal();
+						}
 					}
 				}
 			}else{
@@ -171,10 +176,14 @@ void UCaptureCamera::ProcessSighting(){
 
 void UCaptureCamera::ProcessFirstAnimal(){
 	if(InGameHUD){
-		InGameHUD->DisplayAnimal(SpeciesList[0].SpeciesName,
-									SpeciesList[0].SpeciesTag,
-			 						SpeciesList[0].SpeciesDescription, 
-									SpeciesList[0].SpeciesImageLink);
+		Reference++;
+		InGameHUD->DisplayAnimal(SpeciesList[Reference].SpeciesName,
+									SpeciesList[Reference].SpeciesTag,
+			 						SpeciesList[Reference].SpeciesDescription, 
+									SpeciesList[Reference].SpeciesImageLink);
+		if(IsRecordViewable){
+			InGameHUD->OpenBook();
+		}
 	}
 
 }
@@ -210,6 +219,15 @@ FRotator UCaptureCamera::GetPlayerRotation(){
 	return PlayerViewPointRotation;
 }
 //
+void UCaptureCamera::ShowNextAnimal(){
+	if(InGameHUD){
+		Reference++;
+		InGameHUD->DisplayAnimal(SpeciesList[Reference].SpeciesName,
+						SpeciesList[Reference].SpeciesTag,
+						SpeciesList[Reference].SpeciesDescription, 
+						SpeciesList[Reference].SpeciesImageLink);
+	}
+}
 
 void UCaptureCamera::UpdateDetailsNext(){
 	if(IsRecordViewable && SpeciesList.Num() > 0 && (SpeciesList.Num() > Reference+1)){
@@ -232,5 +250,11 @@ void UCaptureCamera::UpdateDetailsPrevious(){
 			 						SpeciesList[Reference].SpeciesDescription, 
 									SpeciesList[Reference].SpeciesImageLink);
 		}
+	}
+}
+void UCaptureCamera::QuitGame(){
+	APlayerController* PController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	if(PController){	
+		PController->ConsoleCommand(TEXT("exit")); 
 	}
 }
