@@ -1,5 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
+/*
+	ATTACH THIS ACTOR COMPONENT TO THE MAIN CHARACTER IN THE SCENE.
+*/
 
 #include "Book.h"
 
@@ -19,8 +21,8 @@ void UBook::BeginPlay()
 	// ...
 	
 }
-TMap<FString, UBook::Species> UBook::SpeciesDictionary;
-TMap<FString, TSharedPtr<FSlateDynamicImageBrush>> UBook::SpeciesImageDictionary;
+TMap<FString, UBook::Species> UBook::SpeciesDictionary; //Tag to Species Struct dictionary
+TMap<FString, TSharedPtr<FSlateDynamicImageBrush>> UBook::SpeciesImageDictionary; //Tag to Brush Image dictionary
 
 
 

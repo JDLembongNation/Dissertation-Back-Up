@@ -1,5 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
+/* 
+	ATTACH THIS ACTOR COMPONENT TO THE MAIN CHARACTER IN THE SCENE.
+*/
 
 #include "BerwickshireRequestHandler.h"
 
@@ -33,7 +35,7 @@ void UBerwickshireRequestHandler::TickComponent(float DeltaTime, ELevelTick Tick
 	// ...
 }
 
-
+//METHOD used to call to the database. Change the URL if necessary.
 void UBerwickshireRequestHandler::CallToDatabase()
 {
 	TSharedRef<IHttpRequest> Request = Http->CreateRequest();
@@ -45,7 +47,8 @@ void UBerwickshireRequestHandler::CallToDatabase()
 	Request->SetHeader("Content-Type", TEXT("application/json"));
 	Request->ProcessRequest();
 }
-/*Assigned function on successfull http call*/
+
+/*This function is called when the response is received*/
 void UBerwickshireRequestHandler::OnResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
 {
 	if(bWasSuccessful && Response.IsValid()){
@@ -59,6 +62,7 @@ void UBerwickshireRequestHandler::OnResponseReceived(FHttpRequestPtr Request, FH
 	if (FJsonSerializer::Deserialize(Reader, JsonObject)){
 		ProcessJSON(JsonObject);
 	}
+	//Overwrite the existing JSON file with the newly downloaded JSON file.
 	FString path = FPaths::ProjectContentDir() + "db/contents.json";
 	FFileHelper::SaveStringToFile(Response->GetContentAsString(), *path);
 
@@ -75,11 +79,13 @@ void UBerwickshireRequestHandler::OnResponseReceived(FHttpRequestPtr Request, FH
 	//Deserialize the json data given Reader and the actual object to deserialize
 	if (FJsonSerializer::Deserialize(Reader, JsonObject))
 	{
+		//PARSE JSON
 		ProcessJSON(JsonObject);	
 	}
 	}
 }
 
+//METHOD used for parsing the JSON file --> Change if necessary to suit DB structure needs.
 void UBerwickshireRequestHandler::ProcessJSON(TSharedPtr<FJsonObject> JsonObject){
 	TSharedPtr<FJsonObject> AnimalCollection  = JsonObject->GetObjectField("collections");
 	TSharedPtr<FJsonObject> ItemObject  = JsonObject->GetObjectField("items");
@@ -99,7 +105,6 @@ void UBerwickshireRequestHandler::ProcessJSON(TSharedPtr<FJsonObject> JsonObject
 			Specimen.SpeciesDescription = description;
 		} 
 		else Specimen.SpeciesDescription = TEXT("None");
-		//Specimen.SpeciesImageLink = value->GetStringField("Title");
 		Specimen.SpeciesTag = pair.Value;
 		UBook::SpeciesDictionary.Add(pair.Value, Specimen); //Tag and then species
 		if(records.Num() > 0){
@@ -117,7 +122,7 @@ void UBerwickshireRequestHandler::ProcessJSON(TSharedPtr<FJsonObject> JsonObject
 		}
 	}
 }
-
+//METHOD split the description of the animal up so the HUD can display it properly.
 FString UBerwickshireRequestHandler::SplitString(FString input){
 	FString newString = "";
 	for(int32 i = 0; i < input.Len(); i+=60){
@@ -164,6 +169,7 @@ void UBerwickshireRequestHandler::OnImageReceived(FHttpRequestPtr Request, FHttp
 	}
 }
 
+//METHOD creates a brush object from the local image files.
 TSharedPtr<FSlateDynamicImageBrush> UBerwickshireRequestHandler::CreateLocalBrushes(FString Tag){
 	TSharedPtr<FSlateDynamicImageBrush> Brush;
 	uint32 BytesPerPixel=4;
@@ -201,6 +207,7 @@ TSharedPtr<FSlateDynamicImageBrush> UBerwickshireRequestHandler::CreateLocalBrus
 }
 
 //Code was modifed from https://answers.unrealengine.com/questions/255871/httprest-download-images-in-c.html
+//METHOD creates a brush object from the downloaded image files.
 TSharedPtr<FSlateDynamicImageBrush> UBerwickshireRequestHandler::CreateBrush(FName ResourceName, TArray<uint8> ImageData){
 	TSharedPtr<FSlateDynamicImageBrush> Brush;
 	uint32 BytesPerPixel=4;

@@ -1,5 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
+/*
+	ATTACH THIS ACTOR COMPONENT TO THE MAIN CHARACTER IN THE SCENE.
+*/
 
 #include "CaptureCamera.h"
 #include "Engine/World.h"
@@ -26,7 +28,7 @@ UCaptureCamera::UCaptureCamera()
 void UCaptureCamera::BeginPlay()
 {
 	Super::BeginPlay();
-
+	//bind all inputs to appropriate methods
 	InputComponent = GetOwner()->FindComponentByClass<UInputComponent>();
 	if(InputComponent){
 		InputComponent->BindAction("CaptureScreenshot",IE_Pressed, this, &UCaptureCamera::CaptureShot);
@@ -69,12 +71,13 @@ void UCaptureCamera::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 		5.f
 	); //Indicate the range of the player when interacting with the animals. 
 	*/
-	DetectAnimal();
+	DetectAnimal(); 
 	ProcessSighting();
 	ShowCheckList();
 	DisplayArrows();
 }
 
+//METHOD for toggling instructions from the dedicated input key.
 void UCaptureCamera::ToggleInstructions(){
 	if(InGameHUD){
 	IsInstructionsClosed = !IsInstructionsClosed;
@@ -86,6 +89,7 @@ void UCaptureCamera::ToggleInstructions(){
 	}
 }
 
+//METHOD for activating screenshot from the dedicated input key.
 void UCaptureCamera::CaptureShot(){
 	UE_LOG(LogTemp, Warning, TEXT("Screenshot Captured"));
 	APlayerController* PController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
@@ -94,6 +98,7 @@ void UCaptureCamera::CaptureShot(){
 	}
 }
 
+//METHOD for toggling record HUD from the dedicated input key.
 void UCaptureCamera::ToggleRecords(){
 	if(InGameHUD){
 		IsRecordViewable = !IsRecordViewable;
@@ -108,6 +113,7 @@ void UCaptureCamera::ToggleRecords(){
 	}
 }
 
+//METHOD for displaying the arrows in the Record HUD.
 void UCaptureCamera::DisplayArrows(){
 	if(InGameHUD && Reference >=0 && IsRecordViewable){
 		if(Reference > 0){
@@ -123,6 +129,7 @@ void UCaptureCamera::DisplayArrows(){
 	}
 }
 
+//METHOD for capturing any actor that the raycast from the player hits.
 void UCaptureCamera::DetectAnimal(){
 	LineTraceEnd = GetPlayerLocation() + (GetPlayerRotation().Vector() * Range); //Vector() turns it into a unit vector. 
 	FHitResult Hit;
@@ -137,6 +144,7 @@ void UCaptureCamera::DetectAnimal(){
 	AnimalActor = Hit;
 }
 
+//METHOD for processing the tags of the actors caught and adding them into the appropriate data stores.
 void UCaptureCamera::ProcessSighting(){
 	AActor* ActorHit = AnimalActor.GetActor();
 	if(ActorHit){
